@@ -1,0 +1,19 @@
+{% extends 'errors/error.html' %}
+{% load static  %}
+{% block error %}
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-body p-4 p-md-5">
+      <div class="row hide-alert">
+        <img src="{% static 'media/images/default/error.png' %}" alt="">
+        <h4 style="color:red; text-align:center;margin-top:5px" >500 Erreur de serveur interne</h4>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-center">
+       <a href="{% url 'comptes:index' %}" >Retour à la page d'accueil</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

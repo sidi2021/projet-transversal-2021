@@ -1,0 +1,357 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load main_filter %}
+<!DOCTYPE html>
+
+  <html lang="en">
+
+  <head>
+    <title>Control Panel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% include 'styles.html' %}
+    <link rel="stylesheet" href="{% static 'css/master.css' %}">
+    <style media="screen">
+    .input:focus {
+      border: 0.5px solid #797979  !important;
+    }
+
+    .btn-upload{
+      color: #FFF  !important;
+      background-color: #0094EC  !important;
+    }
+    .btn-upload:hover {
+
+      color: #FFF  !important;
+      background-color: #067DC4 !important;
+    }
+
+    table{
+      cursor: auto !important;
+    }
+    </style>
+  </head>
+
+  <body>
+  <div class="images">
+
+    <div class="modal fade" id="email-show-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="padding: 0">
+          <div class="modal-header">
+            <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="bi bi-x"></span>
+            </button>
+          </div>
+          <div class="modal-body p-4 p-md-5">
+            <h4 class="text-center mb-4">Message</h4>
+              <div class="form-group">
+                <textarea  name="msg-area" rows="8" cols="4" class="form-control" disabled style="background:#FFFF" id="msg-ta"></textarea>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="email-response-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="padding: 0">
+          <div class="modal-header">
+            <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="bi bi-x"></span>
+            </button>
+          </div>
+          <div class="modal-body p-4 p-md-5">
+            <h4 class="text-center mb-4">Repondre le Message</h4>
+            <form class="login-form" method="post"  id="responses-form">
+              {% csrf_token %}
+              <div class="form-group">
+                <label class="labels"><b></b></label>
+                <br>
+                <textarea  name="msg-area-response" rows="8" cols="4" class="form-control input"  id="msg-ta"></textarea>
+                <input type="text" name="msg-response-date"  id="msg-response-date" style="display:none">
+                <input type="text" name="msg-response-name"  id="msg-response-name" style="display:none">
+                <input type="text" name="msg-response-email" id="msg-response-email"  style="display:none">
+              </div>
+              <div class="form-group">
+                <div class="container-contact100-form-btn">
+                  <button type="submit" class="contact100-form-btn fa fa-plus btn-block" style="border-radius:5px; text-transform: capitalize">Envoyer</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="wrapper d-flex align-items-stretch">
+      <nav id="sidebar">
+        <div class="custom-menu">
+          <button type="button" id="sidebarCollapse" class="btn btn-primary">
+            <i class="fa fa-bars"></i>
+            <span class="sr-only">Toggle Menu</span>
+          </button>
+        </div>
+        <div class="p-4 pt-5">
+          <div class="container mb-5" style="display:flex !important; flex-flow:column wrap; align-items:center;">
+            <i class="fa fa-user-circle-o fs-1" aria-hidden="true"></i>
+            <span class="font-weight-bold mt-3">Administrateur</span>
+          </div>
+          <ul class="list-unstyled components mb-5">
+            <li class="active">
+              <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-tasks"></i>&nbsp;&nbsp;Tâches</a>
+              <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li>
+                  <a href="#">Dossiers Valides</a>
+                </li>
+                <li>
+                  <a href="#">Envoyer un dossier</a>
+                </li>
+                <li>
+                  <a href="#">Contacter une direction</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" id="demande-btn"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;&nbsp;Demandes</a>
+            </li>
+            <li>
+              <a href="#" id="message-btn"><i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;&nbsp;Messagerie</a>
+            </li>
+            <li>
+              <a  href="{% url 'comptes:deconnexion' %}" ><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Se deconnecter</a>
+            </li>
+          </ul>
+          <div class="footer">
+            <p>
+            <div class="copyright container px-4 px-lg-5">
+              <div class="small text-center text-muted" style="color:#FFF !important">Copyright &copy;<br><span id="copyright"></span>-ESP Dakar</div>
+            </div>
+            </a>
+            </p>
+          </div>
+        </div>
+      </nav>
+
+
+
+
+
+      <div class="limiter" id="demande-div"  class="table-ctn" style="" >
+        <div class="container-table100">
+          <div class="wrap-table100">
+            <div class="table100 ver1 m-b-110">
+              <div class="table100-head">
+                <table>
+                  <thead>
+                    <tr class="row100 head">
+                      <th>Informations sur l'etudiant</th>
+                      <th>Type du document</th>
+                      <th>Scan du cerificat d'inscription</th>
+                      <th>Scan du cerificat de reussite </th>
+                      <th>Date de retret</th>
+                      <th>Lieu de retret</th>
+                      <th>Date du demande</th>
+                      <th>Notifier</th>
+                      <th>Etapes Validees</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="table100-body js-pscroll">
+
+
+                <table>
+                  <tbody><tr>
+                    {% for demande in demandes %}
+
+
+                    <div class="modal fade" id="user-show-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content" style="padding: 0">
+                          <div class="modal-header">
+                            <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true" class="bi bi-x"></span>
+                            </button>
+                          </div>
+                          <div class="modal-body p-4 p-md-5" id="pdf-body">
+                            <h4 class="text-center mb-4 text-primary" color: #0094EC>{{demande.user.profile.prenom}} {{demande.user.profile.nom}}</h4>
+                            <br>
+                            <div class="font-weight-bold mt-4" style="text-align:center"><img class="rounded-circle mt-1" width="150px" src="{{demande.user.profile.image.url}}" style="margin:auto"></div>
+                            <br>
+                            <div class="font-weight-bold mt-2" style="text-align:center">{{demande.user.profile.user.username}}</div>
+                            <div class="text-black-50 mb-5" style="text-align:center">{{demande.user.email}}</div>
+                            <div class="row mt-2 mb-5">
+                              <div class="col-md-12"><label><b>Date de naissance:&nbsp;&nbsp;</b></label>{{demande.user.profile.date_de_naissance}}</div>
+                              <div class="col-md-12"><label><b>Pays de naissance:&nbsp;&nbsp;</b></label>{{demande.user.profile.pays_de_naissacne}}</div>
+                              <div class="col-md-12"><label><b>Lieu de naissance:&nbsp;&nbsp;</b></label>{{demande.user.profile.lieu_de_naissacne}}</div>
+                              <div class="col-md-12"><label><b>Departement:&nbsp;&nbsp;</b></label>{{demande.user.profile.departement}}</div>
+                              <div class="col-md-12"><label><b>Formation:&nbsp;&nbsp;</b></label>{{demande.user.profile.formation}} </div>
+                              <div class="col-md-12"><label><b>Numero Etudient:&nbsp;&nbsp;</b></label>{{demande.user.profile.numero_etudiant}}</div>
+                              <div class="col-md-12"><label><b>Numero de telephone:&nbsp;&nbsp;</b></label>{{demande.user.profile.numero_de_telephone}}</div>
+                              <div class="col-md-12"><label><b>Annee universitaire:&nbsp;&nbsp;</b></label>{{demande.user.profile.anne_universitaire }}</div>
+                              <div class="col-md-12"><label><b>Nom du personne a contacter:&nbsp;&nbsp;</b></label>{{demande.user.profile.nom_du_personne_a_contacter}}</div>
+                              <div class="col-md-12"><label><b>Numero du personne a contacter:&nbsp;&nbsp;</b></label>{{demande.user.profile.numero_du_telephone_personne_a_contacter}}</div>
+                              <div class="col-md-12"><label><b>Pays de residence:&nbsp;&nbsp;</b></label>{{demande.user.profile.pays_de_residence}}</div>
+                              <div class="col-md-12"><label><b>Inscit le:&nbsp;&nbsp;</b></label>{{demande.user.profile.cree_le}}</div>
+                                <div class="col-md-12">
+                                  <form method="post" id="user-email-form">
+                                  {% csrf_token %}
+                                  <input type="text" hidden value="{{demande.user.profile.id}}" name="user-email-input">
+                                  <button class="btn-upload btn mt-3" id="save-user"><i class="fa fa-download " aria-hidden="true"></i>&nbsp;&nbsp;Telecharger</button>
+                                  </form>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <td><button class="btn btn-success brn-message"  style="padding:2px 8px" data-toggle="modal" data-target="#user-show-modal" id="show-user">Plus d'informations&nbsp;&nbsp;<i class="fa fa-info-circle"></i></button></td>
+                    <td>{{demande.type}}</td>
+                    <td><img style="outline: 2px solid #3699E8" src="{{ demande.Scan_cerificat_de_inscription.url }}" class="img img-test" data-url="{{ demande.Scan_cerificat_de_inscription.url }}" class="img-fluid pull-xs-left" "Image introuvable" width="40" height="40">&nbsp;&nbsp;<button onClick="download('{{demande.Scan_cerificat_de_inscription.url}}')" class="btn"><i class="fa fa-download fs-1 text-primary" aria-hidden="true"></i></button></td>
+                    <td><img style="outline: 2px solid #3699E8"  src="{{ demande.Scan_cerificat_de_reussite.url }}" class="img img-test" data-url="{{ demande.Scan_cerificat_de_reussite.url }}" class="img-fluid pull-xs-left" "Image introuvable" width="40" height="40">&nbsp;&nbsp;<button onClick="download('{{demande.Scan_cerificat_de_reussite.url}}')" class="btn"><i class="fa fa-download fs-1 text-primary" aria-hidden="true"></i></button></td>
+                    <td>{{demande.date_de_retret}}</td>
+                    <td>{{demande.lieu_de_retret}}</td>
+                    <td>{{demande.cree_le}}</td>
+
+                      <form method="post">
+                      <td class="column9">
+                          {% csrf_token %}
+                          <input hidden name="notify" value="notify">
+                          <input hidden name="notify-email" value="{{demande.user.email}}">
+                          <button class="btn btn-success brn-message"  style="padding:2px 10px; margin-left:15px" id="show-user">Notifier&nbsp;&nbsp;<i class="fa fa-bell-o" aria-hidden="true"></i></button>
+
+                  </td>
+                    </form>
+                    {% if profile.etapes_validees %}
+                    <td class="column8">Validee&nbsp;&nbsp;<i class="fa fa-check text-success"></i></td>
+                    {% else %}
+                    <td class="column8">Non Validee&nbsp;&nbsp;<i class="fa fa-times text-danger" aria-hidden="true"></i></td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="limiter" id="message-div"  class="table-ctn" style="display:none;" >
+        <div class="container-table100">
+          <div class="wrap-table100">
+            <div class="table100 ver1 m-b-110">
+              <div class="table100-head">
+                <table>
+                  <thead>
+                    <tr class="row100 head">
+                      <th class="cell100">Nom de L'expéditeur</th>
+                      <th class="cell100">Email de L'expéditeur</th>
+                      <th class="cell100">Contenu du message</th>
+                      <th class="cell100">Date de l'envoi</th>
+                      <th class="cell100">Repondre Le message</th>
+                      <th class="cell100">Repondu ou pas</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="table100-body js-pscroll">
+                <table>
+                  <tbody>
+                    <tr>
+                      {% for msg in msgs %}
+                      <td>{{msg.name}}</td>
+                      <td>{{msg.email}}</td>
+                      <td><a heref="" class="text-primary a-message" data-toggle="modal" data-target="#email-show-modal"><i id="i-msg-msg" style="display:none">{{msg.message}}</i>{{msg}}</a></td>
+                      <td>{{msg.date}}</td>
+                      <td><button class="btn btn-success brn-message"  style="padding:2px 8px" data-toggle="modal" data-target="#email-response-modal">
+                        Repondre&nbsp;&nbsp;<i class="bi bi-reply"></i>
+                        <i style="display:none" id="i-date">{{msg.date}}</i>
+                        <i style="display:none" id="i-name">{{msg.name}}</i>
+                        <i style="display:none" id="i-email">{{msg.email}}</i>
+                      </button></td>
+                      {% if msg.repondu %}
+                      <td>Repondu&nbsp;&nbsp;<i class="fa fa-check text-success"></i></td>
+                      {% else %}
+                      <td>Non Repondu&nbsp;&nbsp;<i class="fa fa-times text-danger" aria-hidden="true"></i></td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+</div>
+<div id="image-viewer">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="full-image">
+</div>
+  </body>
+  {% include 'scripts.html' %}
+
+<script type="text/javascript">
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        $.notify("{{message}}", "success");
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  $('.a-message').click(function(event) {
+    $('#msg-ta').val($('#i-msg-msg').text())
+  });
+
+  $("#responses-form").submit(function(event) {
+    $('#msg-response-date').val($("#i-date").text());
+    $('#msg-response-name').val($("#i-name").text())
+    $('#msg-response-email').val($("#i-email").text());
+  });
+
+  $("#demande-btn").click(function(event) {
+  $("#message-div").css('display', 'none');
+    $("#demande-div").css('display', 'block');
+  });
+
+  $("#message-btn").click(function(event) {
+  $("#demande-div").css('display', 'none');
+  $("#message-div").css('display', 'block');
+  });
+
+  $("#user-show-modal").click(function(event) {
+
+  });
+
+  function download(fileUrl) {
+    var link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = "file_" + new Date() + ".jpg";
+    link.click();
+    link.remove();
+  }
+</script>
+
+</div>
+</div>
+<script src="{% static 'js/jquery-3.6.0.slim.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/master.css' %}">
+</html>

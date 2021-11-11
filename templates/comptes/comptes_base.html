@@ -1,0 +1,104 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% include 'styles.html' %}
+</head>
+
+<body>
+
+
+  <div class="modal fade" id="confirm-modal-delete" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true" style="z-index:4000; box-shadow:10px 10px 20px #000">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="padding: 0">
+        <div class="modal-header">
+          <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="bi bi-x"></span>
+          </button>
+        </div>
+        <div class="modal-body p-4 p-md-5">
+          <h4 class="text-center mb-4">Vouler vous confirmer</h4>
+            <div class="form-group">
+              <button type="submit" class="form-control btn btn-success mt-3" id="confirm-btn-delete">Confirmer</button>
+              <button type="submit" class="form-control btn btn-danger mt-2" data-dismiss="modal" aria-label="Close">Annuler</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wrapper d-flex align-items-stretch"  style="min-height: 100%;">
+    <nav id="sidebar">
+      <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+          <i class="fa fa-bars"></i>
+          <span class="sr-only">Toggle Menu</span>
+        </button>
+      </div>
+      <div class="p-4 pt-5">
+        <div class="container mb-5" style="display:flex !important; flex-flow:column wrap; align-items:center;">
+          <img class="rounded-circle" width="40px" height="40px" src="{{profile.image.url}}">
+          <span class="font-weight-bold">{{profile.user.username}}</span>
+          <span class="text-white-50" style="font-weight:bold">{{user.email}}</span>
+        </div>
+        <ul class="list-unstyled components mb-5">
+          <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-cog" id="settings-btn"></i>&nbsp;&nbsp;Paramètres</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+              {% if is_profile %}
+              <li><a href="{% url 'comptes:changer_profile' profile.id %}"><i class='fa fa-edit'></i>&nbsp;&nbsp;Changer le Profile</a></li>
+              {% endif %}
+              <li><a href="#"><i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;Signaler un problème</a></li>
+              <li><a id="delete-account" href="#" data-toggle="modal" data-target="#confirm-modal-delete"><i class="fa fa-user-times"></i>&nbsp;&nbsp;Supprimer le compte</a></li>
+            </ul>
+          </li>
+          {% if not is_profile %}
+          <li class="nav-item"><a href="{% url 'comptes:profile' profile.id %}"><i class="bi bi-person-circle"></i>&nbsp;&nbsp;Profile</a></li>
+          {% endif %}
+          <li><a href="{% url 'comptes:deconnexion' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Se deconnecter</a></li>
+        </ul>
+        <div class="footer">
+          <p>
+          <div class="copyright container px-4 px-lg-5">
+            <div class="small text-center text-muted" style="color:#FFF !important">Copyright &copy;<br><span id="copyright"></span>-ESP Dakar</div>
+          </div>
+          </a>
+          </p>
+        </div>
+      </div>
+    </nav>
+    <div class="table-ctn">
+      <div class="container-fluid">
+
+        {% block content %}
+
+        {% endblock %}
+      </div>
+
+    </div>
+  </div>
+</body>
+<script type="text/javascript">
+  $('#delete-account').click(function(event) {
+    event.preventDefault();
+    $("#confirm-btn-delete").click(function(event) {
+      window.location.href = "{% url 'comptes:remove_user' %}";
+    });
+  });
+
+ $('#btn-remove-user').click(function(event) {
+   event.preventDefault();
+   $("#confirm-btn-delete").click(function(event) {
+     window.location.href = "{% url 'comptes:remove_user' %}";
+   });
+ });
+
+</script>
+</html>

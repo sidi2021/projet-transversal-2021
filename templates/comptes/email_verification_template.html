@@ -1,0 +1,20 @@
+{% extends 'email_template.html' %}
+
+{% block title %}Bonjour {{ user.username }}{% endblock %}
+{% block instructions %}
+  Veuillez cliquer sur le lien ci-dessous pour confirmer votre inscription :
+{% endblock %}
+
+{% block context %}
+  {% autoescape off %}
+    http://{{ domain }}{% url 'comptes:activer' uidb64=uid token=token %}
+  {% endautoescape %}
+{% endblock %}
+
+{% block info %}
+  Si le processus de confirmation est réussi, le lien vous mènera à votre compte
+{% endblock %}
+
+{% block end %}
+  Bonne chance! Esperons que ça marche.
+{% endblock %}

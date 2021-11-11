@@ -1,0 +1,303 @@
+{% extends 'comptes/comptes_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+
+{% block title %}profile{% endblock %}
+
+{% block content %}
+<style media="screen">
+  .input:focus {
+    border: 0.5px solid #797979 !important;
+  }
+
+  .btn-upload {
+    color: #FFF !important;
+    background-color: #0094EC !important;
+  }
+
+  .btn-upload:hover {
+
+    color: #FFF !important;
+    background-color: #067DC4 !important;
+  }
+
+
+
+</style>
+
+
+<div class="modal fade" id="payement-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true" style="z-index:4000; box-shadow:10px 10px 20px #000">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="padding: 0">
+      <div class="modal-body">
+        <div class="modal-header">
+          <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="bi bi-x"></span>
+          </button>
+        </div>
+        <div class="tabs mt-3">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation"> <a class="nav-link active" id="visa-tab" data-toggle="tab" href="#visa" role="tab" aria-controls="visa" aria-selected="true"> <img src="{% static 'media/images/default/sB4jftM.png' %}" width="80"> </a> </li>
+            <li class="nav-item" role="presentation"> <a class="nav-link" id="paypal-tab" data-toggle="tab" href="#paypal" role="tab" aria-controls="paypal" aria-selected="false"> <img src="{% static 'media/images/default/yK7EDD1.png' %}" width="80"> </a> </li>
+            <li class="nav-item" role="presentation"> <a class="nav-link" id="orange-tab" data-toggle="tab" href="#orange" role="tab" aria-controls="paypal" aria-selected="false"> <img src="{% static 'media/images/default/om.png' %}" width="80"> </a> </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="visa" role="tabpanel" aria-labelledby="visa-tab">
+              <div class="mt-4 mx-4">
+                <div class="text-center">
+                  <h5>Carte de crédit</h5>
+                </div>
+                <div class="form mt-3">
+                  <div class="inputbox"><span>Nom du titulaire</span><input type="text" name="name" class="form-control input rounded-left inpu" required="required"></div>
+                  <div class="inputbox"><span>Numéro de carte</span><input type="text" name="name" min="1" max="999" class="form-control input rounded-left inpu" required="required"><i class="fa fa-eye"></i></div>
+                  <div class="d-flex flex-row">
+                    <div class="inputbox mr-2"><span>Date d'expiration</span><input type="text" name="name" min="1" max="999" class="form-control input rounded-left inpu" required="required"></div>
+                    <div class="inputbox"><span>CVV</span><input type="text" name="name" min="1" max="999" class="form-control input rounded-left inpu" required="required"></div>
+                  </div>
+                  <br>
+                  <div class="px-5 pay"> <button class="contact100-form-btn mt-4 btn-block" style="border-radius:1; text-transform: capitalize;">Ajouter la carte</button> </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="paypal" role="tabpanel" aria-labelledby="paypal-tab">
+              <div class="px-5 mt-5">
+                <div class="inputbox"><span>Adress mail de Paypal</span><input type="text" name="name" class="form-control input rounded-left inpu" required="required"></div>
+                <br>
+                <div class="pay px-5"> <button class="contact100-form-btn mt-4 btn-block" style="border-radius:1; text-transform: capitalize;">Ajouter paypal</button> </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="orange" role="tabpanel" aria-labelledby="paypal-tab">
+              <div class="px-5 mt-5">
+                <div class="inputbox"><span>Numero du compte orange money</span><input type="text" name="name" class="form-control input rounded-left inpu" required="required"></div>
+                <br>
+                <div class="pay px-5"> <button class="contact100-form-btn mt-4 btn-block" style="border-radius:1; text-transform: capitalize;">Ajouter Orange</button> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true" style="z-index:4000; box-shadow:10px 10px 20px #000">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="padding: 0">
+      <div class="modal-header">
+        <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="bi bi-x"></span>
+        </button>
+      </div>
+      <div class="modal-body p-4 p-md-5">
+        <h4 class="text-center mb-4">Vouler vous confirmer</h4>
+        <div class="form-group">
+          <button type="submit" class="form-control btn btn-success mt-3" id="confirm-btn">Confirmer</button>
+          <button type="submit" class="form-control btn btn-danger mt-2" data-dismiss="modal" aria-label="Close">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="mymodalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="padding: 0!important">
+    <div class="modal-content" style="padding: 0">
+      <div class="modal-header">
+        <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="bi bi-x"></span>
+        </button>
+      </div>
+      <div class="modal-body p-4 p-md-5">
+        <h4 class="text-center mb-4">Demande</h4>
+        <form class="login-form" method="post" enctype="multipart/form-data" id="demand-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="labels"><b>{{demande_form.type.label}}</b></label>
+            <br>
+            {% render_field demande_form.type|append_attr:"class:input form-select rounded-left input" placeholder=form.nom.label %}
+          </div>
+          <div class="form-group">
+            <label class="labels"><b>{{demande_form.lieu_de_retret.label}}</b></label>
+            <br>
+            {% render_field demande_form.lieu_de_retret|append_attr:"class:form-control input rounded-left input" placeholder=form.nom.label %}
+          </div>
+          <div class="form-group">
+            <label for=""><b>Scan du cerificat d'inscription de l'anneee demandee:</b></label>
+            <br>
+            {% render_field demande_form.Scan_cerificat_de_inscription|append_attr:"class:form-control input rounded-left"  id="file-1" accept="image/*"  style="display:none" %}
+            <button type="button" class="rounded btn btn-upload" onclick="document.getElementById('file-1').click()">Choisir&nbsp;&nbsp;<i class="fa fa-upload"></i></button>
+            <span id="out-1" style="margin-left: 5px">Aucun fichier choisi</span>
+          </div>
+          <div class="form-group">
+            <label for=""><b>Scan d'attestation de reussite de l'annees demendee:</b></label>
+            <br>
+            {% render_field demande_form.Scan_cerificat_de_reussite|append_attr:"class:form-control input rounded-left" id="file-2" accept="image/*"  style="display:none" %}
+            <button type="button" class="rounded btn btn-upload" onclick="document.getElementById('file-2').click()">Choisir&nbsp;&nbsp;<i class="fa fa-upload"></i></button>
+            <span id="out-2" style="margin-left: 5px">Aucun fichier choisi</span>
+          </div>
+          <div class="form-group">
+            <div class="container-contact100-form-btn">
+              <span class="contact100-form-btn fa fa-plus btn-block" style="border-radius:5px; text-transform: capitalize; text-align: center; vertical-align: center; cursor: pointer; padding-top:14px" data-toggle="modal"
+                data-target="#confirm-modal">Enregistrer</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid rounded bg-white" style="min-height:100%">
+
+  <div class="row" style="min-height: 800px" id="notify-ctn">
+    <div class="col-md-3 border-right">
+      <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+        <img class="rounded-circle mt-5" width="150px" src="{{profile.image.url}}">
+        <span class="font-weight-bold">{{profile.user.username}}</span>
+        <span class="text-black-50">{{user.email}}</span>
+        <span><button type="button" name="button" class="btn btn-danger mt-3 mb-3" id="btn-remove-user" data-toggle="modal" data-target="#confirm-modal-delete">Suprimer votre compte</button></span>
+        {% if profile.etapes_validees %}
+        <span><b>Validees&nbsp;&nbsp;<i class="fa fa-check text-success"></i></b></span>
+        <span>
+        </span>
+        {% else %}
+        <span><b>Non validees&nbsp;&nbsp;<i class="fa fa-exclamation-circle text-danger"></i></b></span>
+        {% endif %}
+        </span>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-right" style="text-align: center; color: #0094EC">{{profile.prenom}} {{profile.nom}}</h4>
+        </div>
+        <div class="row mt-2 mb-5">
+          <div class="col-md-6"><label><b>Date de naissance:&nbsp;&nbsp;</b></label>{{profile.date_de_naissance}}</div>
+          <div class="col-md-6"><label><b>Pays de naissance:&nbsp;&nbsp;</b></label>{{profile.pays_de_naissacne}}</div>
+          <div class="col-md-6"><label><b>Lieu de naissance:&nbsp;&nbsp;</b></label>{{profile.lieu_de_naissacne}}</div>
+          <div class="col-md-6"><label><b>Departement:&nbsp;&nbsp;</b></label>{{profile.departement}}</div>
+          <div class="col-md-6"><label><b>Formation:&nbsp;&nbsp;</b></label>{{profile.formation}} </div>
+          <div class="col-md-6"><label><b>Numero Etudient:&nbsp;&nbsp;</b></label>{{profile.numero_etudiant}}</div>
+          <div class="col-md-6"><label><b>Numero de telephone:&nbsp;&nbsp;</b></label>{{profile.numero_de_telephone}}</div>
+          <div class="col-md-6"><label><b>Annee universitaire:&nbsp;&nbsp;</b></label>{{profile.anne_universitaire }}</div>
+          <div class="col-md-6"><label><b>Nom du personne a contacter:&nbsp;&nbsp;</b></label>{{profile.nom_du_personne_a_contacter}}</div>
+          <div class="col-md-6"><label><b>Numero du personne a contacter:&nbsp;&nbsp;</b></label>{{profile.numero_du_telephone_personne_a_contacter}}</div>
+          <div class="col-md-6"><label><b>Pays de residence:&nbsp;&nbsp;</b></label>{{profile.pays_de_residence}}</div>
+          <div class="col-md-12"><label><b>Cree le:&nbsp;&nbsp;</b></label>{{profile.cree_le}}</div>
+          <div class="col-md-12"><label><b>Dereniere modufication:&nbsp;&nbsp;</b></label>{{profile.modifier_le}}</div>
+        </div>
+
+
+        <hr style="height:1px;border-width:0;color:gray;background-color:gray; margin-bottom:5px;">
+        <h4 class="ml-3 mt-5 text-primary">Demandes&nbsp;&nbsp;(Demandes effectuees ou encours&nbsp; <i class="fa fa-spinner fa-spin"></i>)</h4>
+        <div class="wrap-table100 mt-5">
+          <div class="table100 ver1 m-b-110">
+            <div class="table100-head">
+              <table>
+                <thead>
+                  <tr class="row100 head">
+                    <th class="cell100">Type du demande</th>
+                    <th class="cell100">Date de l'envoi</th>
+                    <th class="cell100">Validation</th>
+                    <th class="cell100">Etat d'avancement</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="table100-body js-pscroll">
+              <table>
+                <tbody>
+                  {% for demande in demandes %}
+                  <tr>
+                    <td>{{demande.type}}</td>
+                    <td>{{demande.cree_le}}</td>
+                    <td>
+                      {% if profile.etapes_validees %}
+                      <span><b>Validees&nbsp;&nbsp;<i class="fa fa-check text-success"></i></b></span>
+                      <span>
+                      </span>
+                      {% else %}
+                      <span><b>Non validees&nbsp;&nbsp;<i class="fa fa-exclamation-circle text-danger"></i></b></span>
+                      {% endif %}
+                    </td>
+                    <td><span><b>Encour... &nbsp;&nbsp;<i class="fa fa-spinner fa-spin"></i></b></span></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <hr style="height:1px;border-width:0;color:gray;background-color:gray">
+          <h4 class="ml-3 mt-5 text-primary">Etape 1 &nbsp;&nbsp;(Demende&nbsp;<i class="fa fa-paper-plane text-primary" aria-hidden="true"></i>)</h4>
+          <div class="row mt-5 mb-5">
+            <div class="col-md-3">
+              <button class="contact100-form-btn mt-2 btn-block" style="border-radius:1; text-transform: capitalize;" data-toggle="modal" data-target="#login-modal">Demander un Document&nbsp;&nbsp;<i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+          <hr style="height:1px;border-width:0;color:gray;background-color:gray">
+          <h4 class="mt-5 text-primary">&nbsp;&nbsp;Etape 2 &nbsp;&nbsp;(Payement&nbsp;<i class="fa fa-usd text-primary" aria-hidden="true"></i>)</h4>
+          <div class="row mt-2">
+            <div class="col-md-3">
+              <button class="contact100-form-btn mt-4 btn-block" style="border-radius:1; text-transform: capitalize;" data-toggle="modal" data-target="#payement-modal">Paiement des frais&nbsp;&nbsp;<i class="fa fa-credit-card"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% include 'scripts.html' %}
+<script type="text/javascript">
+  let file1 = document.getElementById('file-1');
+  let outp1 = document.getElementById('out-1');
+  let file2 = document.getElementById('file-2');
+  let outp2 = document.getElementById('out-2');
+  file1.addEventListener("change", function() {
+    for (var i = 0; i < file1.files.length; i++) {
+      outp1.innerText = file1.files[i].name;
+    }
+  }, false);
+  file2.addEventListener("change", function() {
+    for (var i = 0; i < file2.files.length; i++) {
+      outp2.innerText = file2.files[i].name;
+    }
+  }, false);
+
+
+
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        $.notify("{{message}}", "success");
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        $.notify("{{message}}", "error");
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  $('#confirm-btn').click(function(event) {
+    if (true) {
+      $.notify("Verifier votre email vous aller recevoir un email si votre dossier est recu", "info");
+      setTimeout(function() {
+        $("#demand-form").submit()
+      }, 3000);
+
+    } else {
+      $.notify("Le champs du formulaire ne sont touts remplis", "error");
+    }
+  });
+</script>
+
+{% endblock %}

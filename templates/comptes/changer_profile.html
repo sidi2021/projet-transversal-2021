@@ -1,0 +1,91 @@
+{% extends 'comptes/comptes_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Paramètres du profile{% endblock %}
+{% block content %}
+<style media="screen">
+  a[href^="/media/images/users"] {
+    display: none;
+  }
+  .input:focus {
+    border: 0.5px solid #797979  !important;
+  }
+</style>
+<form class="login-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="container-fluid rounded bg-white" style="min-height:100%">
+    <div class="row" style="min-height: 800px">
+      <div class="col-md-3 border-right">
+        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+          <a class="thumbnail" href="#">
+            <div class="icon-wrap" onclick="document.getElementById('file').click()" style='margin-top: 40px'>
+            <img class="rounded-circle  img-responsive" width="150px" src="{{profile.image.url}}" style='cursor:pointer' id="image-change" onclick="document.getElementById('file').click()">
+
+            </div>
+            <i class='fa fa-camera font-weight-bold text-black' style='font-size:  30px; font-style:normal; color: rgba(0, 0, 0, 0.7);margin-top: -50px'></i>
+            <span style="  display: none;">
+              {% render_field form.image|append_attr:"class:hh" style="display: none" id="file" accept="image/*"%}
+            </span>
+            <div class="caption font-weight-bold text-black">{{profile.user.username}}</div>
+          </a>
+          <span class="text-black-50">{{profile.user.email}}</span>
+        </div>
+      </div>
+      <div class="col-md-9 border-right">
+        <div class="p-3 py-5">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="text-right" style="text-align: center; color: #0094EC">Paramètres du profile</h4>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.nom.label}}</b></label>{% render_field form.nom|append_attr:"class:form-control input rounded-left" placeholder=form.nom.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.prenom.label}}</b></label>{% render_field form.prenom|append_attr:"class:form-control input rounded-left" placeholder=form.prenom.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.date_de_naissance.label}}</b></label> {% render_field form.date_de_naissance|append_attr:"class:form-control input rounded-left" value="{{profile.date_de_naissance}}" %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.pays_de_naissacne.label}}</b></label> {% render_field form.pays_de_naissacne|append_attr:"class:form-select input rounded-left" placeholder=form.pays_de_naissacne.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.lieu_de_naissacne.label}}</b></label> {% render_field form.lieu_de_naissacne|append_attr:"class:form-control input rounded-left" placeholder=form.lieu_de_naissacne.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.pays_de_residence.label}}</b></label> {% render_field form.pays_de_residence|append_attr:"class:form-select input rounded-left" placeholder=form.pays_de_residence.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.departement.label}}</b></label> {% render_field form.departement|append_attr:"class:form-select input rounded-left" placeholder=form.anne_universitaire.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.anne_universitaire.label}}</b></label> {% render_field form.anne_universitaire|append_attr:"class:form-select input rounded-left" placeholder=form.formation.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.formation.label}}</b></label> {% render_field form.formation|append_attr:"class:form-select input rounded-left" placeholder=form.numero_etudiant.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.numero_etudiant.label}}</b></label> {% render_field form.numero_etudiant|append_attr:"class:form-control input rounded-left" placeholder=form.numero_etudiant.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.numero_de_telephone.label}}</b></label> {% render_field form.numero_de_telephone|append_attr:"class:form-control input rounded-left" placeholder=form.numero_de_telephone.label %}</div>
+            <div class="col-md-4 p-4"><label
+                class="labels"><b>{{form.nom_du_personne_a_contacter.label}}</b></label>{% render_field form.nom_du_personne_a_contacter|append_attr:"class:form-control input rounded-left" placeholder=form.nom_du_personne_a_contacter.label %}</div>
+            <div class="col-md-4 p-4"><label class="labels"><b>{{form.numero_du_telephone_personne_a_contacter.label}}</b></label>
+              {% render_field form.numero_du_telephone_personne_a_contacter|append_attr:"class:form-control input rounded-left" placeholder=form.numero_du_telephone_personne_a_contacter.label %}</div>
+          </div>
+          <div class="mt-5 text-center">
+            <div class="container-contact100-form-btn">
+              <button class="contact100-form-btn fa fa-plus" style="border-radius:1">
+                Enregister
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+</form>
+{% include 'scripts.html' %}
+<script type="text/javascript">
+  let file = document.getElementById('file');
+  file.addEventListener("change", function(e) {
+    document.getElementById('image-change').setAttribute('src', URL.createObjectURL(event.target.files[0]))
+  }, false);
+
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        $.notify("{{message}}", "success");
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  $( function() {
+      $( "#datepicker" ).datepicker();
+    } );
+</script>
+{% endblock %}

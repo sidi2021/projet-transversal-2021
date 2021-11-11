@@ -1,0 +1,15 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Erreur !</title>
+    {% include 'styles.html' %}
+  </head>
+  <body style="background-image: linear-gradient(to right, #2DB4FA, #0195ED)">
+    {% block error %}
+
+    {% endblock %}
+  </body>
+  {% include 'scripts.html' %}
+</html>
